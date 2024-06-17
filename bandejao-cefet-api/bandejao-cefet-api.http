@@ -1,0 +1,6 @@
+@bandejao_cefet_api_HostAddress = http://localhost:5093
+
+GET {{bandejao_cefet_api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
