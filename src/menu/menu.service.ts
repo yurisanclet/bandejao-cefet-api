@@ -1,9 +1,8 @@
-import { PaginationDto } from './../common/dto/pagination.dto';
 import { Injectable } from '@nestjs/common';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Menu } from './entities/menu.entity';
 import { Pagination } from '../helpers/decorators/paginationParam.decorator';
 import { PaginatedResource } from 'src/common/interface/paginate.interface';
