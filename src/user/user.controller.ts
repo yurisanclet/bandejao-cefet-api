@@ -51,8 +51,13 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return await this.userService.update(id, updateUserDto);
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto, @Res() user: Response) {
+    try {
+      await this.userService.update(id, updateUserDto);
+      return user.status(200).json({ message: 'User updated successfully' });
+    } catch (error) {
+      return user.status(400).json({ message: error.message });
+    }
   }
 
   @Delete(':id')
