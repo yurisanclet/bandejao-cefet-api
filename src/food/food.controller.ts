@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, UseGuards } from '@nestjs/common';
 import { FoodService } from './food.service';
 import { CreateFoodDto } from './dto/create-food.dto';
 import { UpdateFoodDto } from './dto/update-food.dto';
@@ -7,7 +7,9 @@ import { Pagination, PaginationParams } from 'src/helpers/decorators/paginationP
 import { Response } from 'express';
 import { Sorting, SortingParams } from 'src/helpers/decorators/sortParam.decorator';
 import { Filtering, FilteringParams } from 'src/helpers/decorators/filteringParam.decorator';
+import { JwtAuthGuard } from 'src/auth/guard/jwt.auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('food')
 export class FoodController {
   constructor(private readonly foodService: FoodService) {}

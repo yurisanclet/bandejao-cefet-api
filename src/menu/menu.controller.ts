@@ -8,6 +8,7 @@ import {
   Delete,
   Res,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { MenuService } from './menu.service';
 import { CreateMenuDto } from './dto/create-menu.dto';
@@ -22,7 +23,9 @@ import {
   Filtering,
   FilteringParams,
 } from 'src/helpers/decorators/filteringParam.decorator';
+import { JwtAuthGuard } from 'src/auth/guard/jwt.auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('menu')
 export class MenuController {
   constructor(private readonly menuService: MenuService) {}

@@ -1,8 +1,15 @@
-import { Exclude } from "class-transformer";
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
-import { CreateUserDto } from "../dto/create-user.dto";
+/* eslint-disable prettier/prettier */
+import { Exclude } from 'class-transformer';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  Unique,
+} from 'typeorm';
+import { CreateUserDto } from '../dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
-import { UpdateUserDto } from "../dto/update-user.dto";
+import { UpdateUserDto } from '../dto/update-user.dto';
 
 @Entity()
 export class User {
@@ -18,6 +25,7 @@ export class User {
   email: string;
 
   @Column('text')
+  @Exclude()
   password: string;
 
   @Column('text')
@@ -27,14 +35,14 @@ export class User {
   document: string;
 
   @Column('date')
-  birthdate: Date;
+  birthDate: Date;
 
   constructor(createUserDTO?: CreateUserDto) {
     if (createUserDTO) {
       this.email = createUserDTO.email;
       this.name = createUserDTO.name;
       this.document = createUserDTO.document;
-      this.birthdate = new Date(createUserDTO.birthdate);
+      this.birthDate = new Date(createUserDTO.birthDate);
       this.password = createUserDTO.password;
     }
   }
@@ -43,5 +51,4 @@ export class User {
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
   }
-
 }

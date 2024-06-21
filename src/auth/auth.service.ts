@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDTO } from './dto/login.dto';
@@ -10,11 +11,11 @@ export class AuthService {
 
   constructor(
     private userService: UserService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
   ) {
     this.jwtOptions = {
       secret: 'defaultSecretKey' || 'defaultSecretKey',
-      verify: { algorithms: ['HS256'] }
+      verify: { algorithms: ['HS256'] },
     };
   }
 
@@ -22,18 +23,27 @@ export class AuthService {
     const payload = { email: user.email, password: user.password };
     const result = await this.validateUser(payload);
     return {
-      access_token: await this.jwtService.signAsync(result, { expiresIn: '1h' })
+      access_token: await this.jwtService.signAsync(result, {
+        expiresIn: '1h',
+      }),
+      user: user.email
     };
   }
 
   async validateUser(payload: any) {
     const user = await this.userService.findOneByEmail(payload.email);
-    if (!bcrypt.compare(payload.password, user.password)) {
-      throw new UnauthorizedException();
+  
+    if (!user) {
+      throw new UnauthorizedException('Usuário não encontrado');
     }
+  
+    const isPasswordValid = await bcrypt.compare(payload.password, user.password);
+  
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Credenciais inválidas');
+    }
+  
     const { password, ...result } = user;
-    
     return result;
   }
-
 }
