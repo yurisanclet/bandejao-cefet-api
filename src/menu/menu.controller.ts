@@ -18,6 +18,10 @@ import {
   Pagination,
   PaginationParams,
 } from '../helpers/decorators/paginationParam.decorator';
+import {
+  Filtering,
+  FilteringParams,
+} from 'src/helpers/decorators/filteringParam.decorator';
 
 @Controller('menu')
 export class MenuController {
@@ -36,10 +40,23 @@ export class MenuController {
   @Get()
   async findAll(
     @PaginationParams() paginationParams: Pagination,
-    @Res() res: Response,
+    @FilteringParams(['date']) filter?: Filtering[],
+    @Res() res?: Response,
   ) {
-    const paginationResults = await this.menuService.findAll(paginationParams);
+    const paginationResults = await this.menuService.findAll(
+      paginationParams,
+      filter,
+    );
     return res.status(200).json(paginationResults);
+  }
+  @Get('/today')
+  async findToday(@Res() res: Response) {
+    try {
+      const menu = await this.menuService.findByDate();
+      return res.status(200).json(menu);
+    } catch (error) {
+      return res.status(404).json({ message: error.message });
+    }
   }
 
   @Get(':id')
