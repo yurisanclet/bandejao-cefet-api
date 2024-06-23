@@ -47,6 +47,7 @@ export class FoodController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
+    console.log(id)
     return this.foodService.remove(id);
   }
 }

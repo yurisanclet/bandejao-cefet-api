@@ -9,6 +9,7 @@ import {
   Res,
   Query,
   UseGuards,
+  UsePipes,
 } from '@nestjs/common';
 import { MenuService } from './menu.service';
 import { CreateMenuDto } from './dto/create-menu.dto';
@@ -24,6 +25,7 @@ import {
   FilteringParams,
 } from 'src/helpers/decorators/filteringParam.decorator';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.auth.guard';
+import { ValidateStringNotNumericPipe } from 'src/pipes/validateStringNotNumber.pipe';
 
 @UseGuards(JwtAuthGuard)
 @Controller('menu')
@@ -31,6 +33,7 @@ export class MenuController {
   constructor(private readonly menuService: MenuService) {}
 
   @Post()
+  @UsePipes(new ValidateStringNotNumericPipe())
   async create(@Body() createMenuDto: CreateMenuDto, @Res() res: Response) {
     try {
       await this.menuService.create(createMenuDto);
@@ -68,6 +71,7 @@ export class MenuController {
   }
 
   @Patch(':id')
+  @UsePipes(new ValidateStringNotNumericPipe())
   async update(
     @Param('id') id: string,
     @Body() updateMenuDto: UpdateMenuDto,

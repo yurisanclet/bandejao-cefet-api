@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("bandejao-cefet-api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4eb3d0af45bdace0981c1d63a89f4e3069f2b890")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4ea0b14dc3800bf4dae004e9e8aea0e70ea49451")]
 [assembly: System.Reflection.AssemblyProductAttribute("bandejao-cefet-api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("bandejao-cefet-api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
