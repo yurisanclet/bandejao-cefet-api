@@ -17,11 +17,16 @@ import { JwtAuthGuard } from 'src/auth/guard/jwt.auth.guard';
 import { Response } from 'express';
 import { UserResponseDto } from './dto/user-response-dto';
 import { plainToClass } from 'class-transformer';
+import { Roles } from 'src/auth/helper/roles.decorator';
+import { UserRoles } from './enum/user-roles.enum';
+import { RolesGuard } from 'src/auth/guard/role.auth.guard';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Roles(UserRoles.ADMIN, UserRoles.NUTRICIONIST, UserRoles.USER)
   @Post()
   async create(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
     try {
@@ -32,6 +37,7 @@ export class UserController {
     }
   }
 
+  @Roles(UserRoles.ADMIN, UserRoles.NUTRICIONIST, UserRoles.USER)
   @Get('/email/:email')
   async findOneByEmail(@Param('email') email: string) {
     const user = await this.userService.findOneByEmail(email);
@@ -39,17 +45,19 @@ export class UserController {
     return userResponse;
   }
 
+  @Roles(UserRoles.ADMIN, UserRoles.NUTRICIONIST, UserRoles.USER)
   @Get()
   async findAll() {
     return await this.userService.findAll();
   }
 
+  @Roles(UserRoles.ADMIN, UserRoles.NUTRICIONIST, UserRoles.USER)
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.userService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Roles(UserRoles.ADMIN, UserRoles.NUTRICIONIST, UserRoles.USER)
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto, @Res() user: Response) {
     try {
@@ -60,6 +68,7 @@ export class UserController {
     }
   }
 
+  @Roles(UserRoles.ADMIN, UserRoles.NUTRICIONIST, UserRoles.USER)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return await this.userService.remove(id);

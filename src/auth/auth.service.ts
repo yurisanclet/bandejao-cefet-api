@@ -26,7 +26,8 @@ export class AuthService {
       access_token: await this.jwtService.signAsync(result, {
         expiresIn: '1h',
       }),
-      user: user.email
+      user: user.email,
+      role: result.role,
     };
   }
 

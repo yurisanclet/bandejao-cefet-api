@@ -26,12 +26,15 @@ import {
 } from 'src/helpers/decorators/filteringParam.decorator';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.auth.guard';
 import { ValidateStringNotNumericPipe } from 'src/pipes/validateStringNotNumber.pipe';
+import { Roles } from 'src/auth/helper/roles.decorator';
+import { UserRoles } from 'src/user/enum/user-roles.enum';
 
 @UseGuards(JwtAuthGuard)
 @Controller('menu')
 export class MenuController {
   constructor(private readonly menuService: MenuService) {}
 
+  @Roles(UserRoles.ADMIN, UserRoles.NUTRICIONIST)
   @Post()
   @UsePipes(new ValidateStringNotNumericPipe())
   async create(@Body() createMenuDto: CreateMenuDto, @Res() res: Response) {
@@ -43,6 +46,7 @@ export class MenuController {
     }
   }
 
+  @Roles(UserRoles.ADMIN, UserRoles.NUTRICIONIST, UserRoles.USER)
   @Get()
   async findAll(
     @PaginationParams() paginationParams: Pagination,
@@ -55,6 +59,8 @@ export class MenuController {
     );
     return res.status(200).json(paginationResults);
   }
+
+  @Roles(UserRoles.ADMIN, UserRoles.NUTRICIONIST, UserRoles.USER)
   @Get('/today')
   async findToday(@Res() res: Response) {
     try {
@@ -65,11 +71,13 @@ export class MenuController {
     }
   }
 
+  @Roles(UserRoles.ADMIN, UserRoles.NUTRICIONIST, UserRoles.USER)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.menuService.findOne(id);
   }
 
+  @Roles(UserRoles.ADMIN, UserRoles.NUTRICIONIST)
   @Patch(':id')
   @UsePipes(new ValidateStringNotNumericPipe())
   async update(
@@ -85,6 +93,7 @@ export class MenuController {
     }
   }
 
+  @Roles(UserRoles.ADMIN, UserRoles.NUTRICIONIST)
   @Delete(':id')
   async remove(@Param('id') id: string, @Res() res: Response) {
     try {

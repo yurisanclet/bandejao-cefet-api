@@ -10,6 +10,7 @@ import {
 import { CreateUserDto } from '../dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { UpdateUserDto } from '../dto/update-user.dto';
+import { UserRoles } from '../enum/user-roles.enum';
 
 @Entity()
 export class User {
@@ -37,6 +38,13 @@ export class User {
   @Column('date')
   birthDate: Date;
 
+  @Column({
+    type: 'enum',
+    enum: UserRoles,
+    default: UserRoles.USER
+  })
+  role: UserRoles;
+
   constructor(createUserDTO?: CreateUserDto) {
     if (createUserDTO) {
       this.email = createUserDTO.email;
@@ -44,6 +52,7 @@ export class User {
       this.document = createUserDTO.document;
       this.birthDate = new Date(createUserDTO.birthDate);
       this.password = createUserDTO.password;
+      this.role = createUserDTO.role ? createUserDTO.role : UserRoles.USER;
     }
   }
 
