@@ -95,8 +95,9 @@ export class FoodService {
   }
 
   async remove(id: string) {
-    const existingFood = await this.findOne(id.toString());
-
+    const existingFood = await this.foodRepository.findOne({
+      where: { id },
+    });
     if (!existingFood) {
       throw new Error('Food not found');
     }

@@ -8,12 +8,16 @@ import { Response } from 'express';
 import { Sorting, SortingParams } from 'src/helpers/decorators/sortParam.decorator';
 import { Filtering, FilteringParams } from 'src/helpers/decorators/filteringParam.decorator';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.auth.guard';
+import { RolesGuard } from 'src/auth/guard/role.auth.guard';
+import { UserRoles } from 'src/user/enum/user-roles.enum';
+import { Roles } from 'src/auth/helper/roles.decorator';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('food')
 export class FoodController {
   constructor(private readonly foodService: FoodService) {}
 
+  @Roles(UserRoles.ADMIN, UserRoles.NUTRICIONIST)
   @Post()
   async create(@Body() createFoodDto: CreateFoodDto, @Res() res: Response) {
     try {
@@ -24,6 +28,7 @@ export class FoodController {
     }
   }
 
+  @Roles(UserRoles.ADMIN, UserRoles.NUTRICIONIST, UserRoles.USER)
   @Get()
   async findAll(
     @PaginationParams() paginationParams : Pagination,
@@ -35,18 +40,22 @@ export class FoodController {
     return res.status(200).json(paginationResults);
   }
 
+  @Roles(UserRoles.ADMIN, UserRoles.NUTRICIONIST, UserRoles.USER)
   @Get(':name')
   async findOne(@Param('name') name: string) {
     return await this.foodService.findOne(name);
   }
 
+  @Roles(UserRoles.ADMIN, UserRoles.NUTRICIONIST)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateFoodDto: UpdateFoodDto) {
     return this.foodService.update(id, updateFoodDto);
   }
 
+  @Roles(UserRoles.ADMIN, UserRoles.NUTRICIONIST)
   @Delete(':id')
   remove(@Param('id') id: string) {
+    console.log(id)
     return this.foodService.remove(id);
   }
 }

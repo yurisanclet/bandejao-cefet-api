@@ -1,8 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, Repository } from 'typeorm';
+import { Between, Equal, Not, Repository } from 'typeorm';
 import { Menu } from './entities/menu.entity';
 import { Pagination } from '../helpers/decorators/paginationParam.decorator';
 import { PaginatedResource } from 'src/common/interface/paginate.interface';
@@ -75,13 +79,30 @@ export class MenuService {
   }
 
   async update(id: string, updateMenuDto: UpdateMenuDto) {
-    const existingMenu = await this.findOne(id);
+    const existingMenu = await this.menuRepository.findOne({
+      where: {
+        id,
+      },
+    });
 
     if (!existingMenu) {
-      throw new Error('Menu not found');
+      throw new NotFoundException('Menu not found');
     }
 
-    return await this.menuRepository.update(id, updateMenuDto);
+    const menuWithSameDate = await this.menuRepository.findOne({
+      where: {
+        date: updateMenuDto.date,
+        id: Not(Equal(id)),
+      },
+    });
+
+    if (menuWithSameDate) {
+      throw new ConflictException('A menu already exists for this date');
+    }
+
+    // Procede com a atualização se não houver conflito de datas
+    await this.menuRepository.update(id, updateMenuDto);
+    return await this.menuRepository.findOne({ where: { id } });
   }
 
   async remove(id: string) {

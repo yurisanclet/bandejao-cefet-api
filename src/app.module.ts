@@ -8,8 +8,6 @@ import { DataSource } from 'typeorm';
 import { FoodModule } from './food/food.module';
 import { PassportModule } from '@nestjs/passport';
 import { AuthModule } from './auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './auth/guard/jwt.auth.guard';
 import { UserModule } from './user/user.module';
 
 @Module({

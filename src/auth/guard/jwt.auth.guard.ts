@@ -23,9 +23,10 @@ export class JwtAuthGuard implements CanActivate {
       throw new UnauthorizedException();
     }
     try {
-      const decodedToken = this.jwtService.decode(token);
-      const result = this.userService.findOneByEmail(decodedToken.email);
+      const decodedToken = await this.jwtService.decode(token);
+      const result = await this.userService.findOneByEmail(decodedToken.email);
       if (decodedToken.email === (await result).email) {
+        request.user = result;
         return true;
       }
       throw new UnauthorizedException();
